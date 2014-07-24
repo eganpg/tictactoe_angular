@@ -4,12 +4,11 @@
 
 var tictactoe = angular.module('tictactoe', ["firebase"]);
 tictactoe.controller('Grid', function($scope, $firebase) {
-	
+	// FireBase Stuff
 	var tictactoeRef = new Firebase("https://tryagain.firebaseio.com/");
 	$scope.remotexMoves = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/xMoves"));
 	$scope.remoteoMoves = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/oMoves"));
-	$scope.remoteCount = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/count"));
-	$scope.cells = [[1,2,4],[8,16,32],[64,128,256]]; 
+	$scope.remoteCount = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/count")); 
 	$scope.remotexMoves.$bind($scope, "xMoves");
 	$scope.remoteoMoves.$bind($scope, "oMoves");
 	$scope.remoteCount.$bind($scope, "count");
@@ -22,15 +21,27 @@ tictactoe.controller('Grid', function($scope, $firebase) {
   $scope.$watch('count', function() {
     console.log('Model changed!') ;
   }) ;
-
-	$scope.xMoves = 0;
+	$scope.$watch('player1', function () {
+  	if($scope.player1 == true) {
+  		$scope.count = 0;
+  	}
+  });
+  $scope.$watch('player2', function() {
+  	if($scope.player2 == true) {
+  		$scope.count = 1;
+  	}
+  });
+ 	// Variable declaration Section
+ 	$scope.cells = [[1,2,4],[8,16,32],[64,128,256]];
+ 	$scope.xMoves = 0;
 	$scope.oMoves = 0;
 	$scope.xArray = [];
 	$scope.oArray = [];
 	$scope.xScore = 0;
 	$scope.oScore = 0;
 	$scope.tieED = 0;
-	// $scope.winningCombo = [[1,2,4],[8,16,32],[64,128,256],[1,8,64],[2,16,128],[4,32,256],[1,16,256],[4,16,64]];
+	$scope.player1 = false;
+	$scope.player2 = false;
 	$scope.binaryWinningCombo = [	{x: 7, descript: 'Vertical Left Win'}, 
 																{x: 56, descript: "Vertical Middle Win"}, 
 																{x: 448, descript: "Vertical Right Win"}, 
@@ -40,7 +51,6 @@ tictactoe.controller('Grid', function($scope, $firebase) {
 																{x: 273, descript: "Diaganol Win"},
 																{x: 84, descript: "Diaganol Win"}
 																];
-	$scope.count = 0;
 	$scope.reset = function() {
 		for(q = 0; q < 9; q++) {
 			$scope.xArray.pop();
@@ -48,38 +58,49 @@ tictactoe.controller('Grid', function($scope, $firebase) {
 			$scope.xMoves = 0;
 			$scope.oMoves = 0;
 			$scope.count = 0;
-			// console.log($scope.xArray);
 		}
 	}
 	$scope.changeColor = function(cell) {
 		if ($scope.count % 2 == 0) {
-			$scope.count = $scope.count + 1;	
-			$scope.xMoves += cell;
-			$scope.addValue = 'X'
-			// $scope.xArray.push(cell);
-			// $scope.winningArrayX();
-			for(var bwcVar in $scope.binaryWinningCombo){
-				var bwc = $scope.binaryWinningCombo[bwcVar];
-				if (($scope.xMoves & bwc.x) == bwc.x) {
-					alert("Player 1 has " + bwc.descript);
-					$scope.keepScoreX();
-					$scope.reset();
+			if ($scope.player1 == true) {
+				$scope.count = $scope.count + 1;	
+				$scope.xMoves += cell;
+				// $scope.xArray.push(cell);
+				// $scope.winningArrayX();
+				for(var bwcVar in $scope.binaryWinningCombo){
+					var bwc = $scope.binaryWinningCombo[bwcVar];
+					if (($scope.xMoves & bwc.x) == bwc.x) {
+						alert("Player 1 has " + bwc.descript);
+						$scope.keepScoreX();
+						$scope.reset();
+					}
+					else if ($scope.count == 9) {
+						$scope.tieED = $scope.tieED + 1;
+						console.log($scope.tieED);
+						$scope.reset();
+					}
 				}
 			}
 			return true;
 		}
-		else {
-			$scope.count = $scope.count + 1;
-			$scope.oMoves += cell;
-			$scope.addValue = 'O';
-			// $scope.oArray.push(cell);
-			// $scope.winningArrayO();
-			for(var bwcVar in $scope.binaryWinningCombo){
-				var bwc = $scope.binaryWinningCombo[bwcVar];
-				if (($scope.oMoves & bwc.x) == bwc.x) {
-					alert("Player 2 has " + bwc.descript);
-					$scope.keepScoreO();
-					$scope.reset(); 
+		else if ($scope.count % 2 == 1) {
+			if($scope.player2 == true) {	
+				$scope.count = $scope.count + 1;
+				$scope.oMoves += cell;
+				// $scope.oArray.push(cell);
+				// $scope.winningArrayO();
+				for(var bwcVar in $scope.binaryWinningCombo){
+					var bwc = $scope.binaryWinningCombo[bwcVar];
+					if (($scope.oMoves & bwc.x) == bwc.x) {
+						alert("Player 2 has " + bwc.descript);
+						$scope.keepScoreO();
+						$scope.reset(); 
+					}
+					else if ($scope.count == 9) {
+						$scope.tieED = $scope.tieED + 1;
+						console.log($scope.tieED);
+						$scope.reset();
+					}
 				}
 			}
 			return false;
@@ -108,6 +129,15 @@ $scope.playerColors = [
 	{color: "url('sf.jpg')", name: 'SF'}
 	];
 });
+
+
+
+
+
+
+
+
+// $scope.winningCombo = [[1,2,4],[8,16,32],[64,128,256],[1,8,64],[2,16,128],[4,32,256],[1,16,256],[4,16,64]];
 // $scope.sortingFunction = function() {
 // 		return $scope.xArray.sort();
 // 	}
