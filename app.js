@@ -1,9 +1,28 @@
-var appName = angular.module('tictactoe', ["firebase"]);
-appName.controller('Grid', function($scope, $firebase) {
-	var xMovesRef = new Firebase("https://learning-tic-tac-toe.firebaseio.com/xMoves");
+// ng-app"" needs to match in three places in line 4&5
+// include the scripts to firebase and angularfire
+
+
+var tictactoe = angular.module('tictactoe', ["firebase"]);
+tictactoe.controller('Grid', function($scope, $firebase) {
+	
+	var tictactoeRef = new Firebase("https://tryagain.firebaseio.com/");
+	$scope.remotexMoves = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/xMoves"));
+	$scope.remoteoMoves = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/oMoves"));
+	$scope.remoteCount = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/count"));
 	$scope.cells = [[1,2,4],[8,16,32],[64,128,256]]; 
-	$scope.xMoves = $firebase(xMovesRef);
-	xMovesRef.push(0);
+	$scope.remotexMoves.$bind($scope, "xMoves");
+	$scope.remoteoMoves.$bind($scope, "oMoves");
+	$scope.remoteCount.$bind($scope, "count");
+	$scope.$watch('xMoves', function() {
+    console.log('Model changed!') ;
+  }) ;
+  $scope.$watch('oMoves', function() {
+    console.log('Model changed!') ;
+  }) ;
+  $scope.$watch('count', function() {
+    console.log('Model changed!') ;
+  }) ;
+
 	$scope.xMoves = 0;
 	$scope.oMoves = 0;
 	$scope.xArray = [];
@@ -11,7 +30,7 @@ appName.controller('Grid', function($scope, $firebase) {
 	$scope.xScore = 0;
 	$scope.oScore = 0;
 	$scope.tieED = 0;
-	$scope.winningCombo = [[1,2,4],[8,16,32],[64,128,256],[1,8,64],[2,16,128],[4,32,256],[1,16,256],[4,16,64]];
+	// $scope.winningCombo = [[1,2,4],[8,16,32],[64,128,256],[1,8,64],[2,16,128],[4,32,256],[1,16,256],[4,16,64]];
 	$scope.binaryWinningCombo = [	{x: 7, descript: 'Vertical Left Win'}, 
 																{x: 56, descript: "Vertical Middle Win"}, 
 																{x: 448, descript: "Vertical Right Win"}, 
@@ -21,38 +40,38 @@ appName.controller('Grid', function($scope, $firebase) {
 																{x: 273, descript: "Diaganol Win"},
 																{x: 84, descript: "Diaganol Win"}
 																];
-	count = 0;
+	$scope.count = 0;
 	$scope.reset = function() {
 		for(q = 0; q < 9; q++) {
 			$scope.xArray.pop();
 			$scope.oArray.pop();
 			$scope.xMoves = 0;
 			$scope.oMoves = 0;
-			count = 0;
+			$scope.count = 0;
 			// console.log($scope.xArray);
 		}
 	}
 	$scope.changeColor = function(cell) {
-		if (count % 2 == 0) {
-			count = count + 1;	
+		if ($scope.count % 2 == 0) {
+			$scope.count = $scope.count + 1;	
 			$scope.xMoves += cell;
-			// $scope.xMoves.$set({xMoves: $scope.xMoves});
+			$scope.addValue = 'X'
 			// $scope.xArray.push(cell);
 			// $scope.winningArrayX();
-			// $scope.clickCounter.$set({clickCounter: $scope.clickCount}) ;
 			for(var bwcVar in $scope.binaryWinningCombo){
 				var bwc = $scope.binaryWinningCombo[bwcVar];
 				if (($scope.xMoves & bwc.x) == bwc.x) {
 					alert("Player 1 has " + bwc.descript);
 					$scope.keepScoreX();
-					// $scope.reset();
+					$scope.reset();
 				}
 			}
 			return true;
 		}
 		else {
-			count = count + 1;
+			$scope.count = $scope.count + 1;
 			$scope.oMoves += cell;
+			$scope.addValue = 'O';
 			// $scope.oArray.push(cell);
 			// $scope.winningArrayO();
 			for(var bwcVar in $scope.binaryWinningCombo){
@@ -60,7 +79,7 @@ appName.controller('Grid', function($scope, $firebase) {
 				if (($scope.oMoves & bwc.x) == bwc.x) {
 					alert("Player 2 has " + bwc.descript);
 					$scope.keepScoreO();
-					// $scope.reset(); 
+					$scope.reset(); 
 				}
 			}
 			return false;
@@ -72,10 +91,12 @@ $scope.isSet = function(whatever, cell){
 }
 $scope.keepScoreX = function() {
 	$scope.xScore = $scope.xScore + 1;
+	$scope.reset();
 	console.log($scope.xScore);
 }
 $scope.keepScoreO = function() {
 	$scope.oScore = $scope.oScore + 1;
+	$scope.reset();
 	console.log($scope.oScore);
 }
 $scope.tie = function() {
@@ -86,6 +107,7 @@ $scope.playerColors = [
 	{color: "url('paris.jpg')", name: 'Paris'},
 	{color: "url('sf.jpg')", name: 'SF'}
 	];
+});
 // $scope.sortingFunction = function() {
 // 		return $scope.xArray.sort();
 // 	}
@@ -285,4 +307,4 @@ $scope.playerColors = [
 // 				}
 // 			}
 // 		}		
-	});
+	

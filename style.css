@@ -36,7 +36,7 @@ h1 {
 	border: black;
 	border-style: solid;
 	border-radius: 5%;
-	height: 100px;
+	height: 80px;
 	margin: 5px;
 }
 
@@ -50,11 +50,13 @@ h1 {
 }
 
 .black {
-	background: black;
+	background-image: url(ximg.gif);
+	background-size: 100%;
 }
 
 .blue {
-	background: blue;
+	background: url(oimg.jpeg);
+	background-size: 100%;
 }
 
 .green {
