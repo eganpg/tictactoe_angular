@@ -1,0 +1,33 @@
+	<!doctype html>
+	<html ng-app="tictactoe">
+	<head>
+		<title>Tic Tac Toe</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.16/angular.js"></script>
+		<script src="https://cdn.firebase.com/js/client/1.0.17/firebase.js"></script>
+		<script src="https://cdn.firebase.com/libs/angularfire/0.6.0/angularfire.min.js"></script>
+		<script type="text/javascript" src="app.js"></script> 
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="shortcut icon" href="ttt.png">
+	</head>
+	<body ng-controller="Grid">
+		<div class="gridcontainer">
+		<h1>Global Tic Tac Toe</h1>	
+			<div class="row" ng-repeat="row in cells track by $index">
+				<div class="column" 
+				// Calls a function that sets an even or odd number and adds it to a count i.e. x++
+				ng-click="changeColor(cell)"
+				// ng class calls two functions, if either is true it sets the class to black or blue, black and blue are linked to my css just like classes .black and .blue that have background-color properties, the is set function simples sets each section to true or false.
+				ng-class="{ black: isSet(xMoves, cell), blue: isSet(oMoves, cell)}"
+				ng-repeat="cell in row track by $index">
+				</div>
+			</div>
+			<div>
+				<h3>Player 1: {{xScore}} {{xMoves}}</h3> 
+				<h3>Player 2: {{oScore}} {{oMoves}}</h3>
+				<h3>Tie: {{tieED}}</h3>
+			</div>
+		</div>
+	</body>
+</html>
+
+

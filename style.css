@@ -1,0 +1,74 @@
+.body_container {
+	background-size: cover;
+	text-align: center;
+	height: 670px;
+	opacity: 0.8;
+	
+}
+
+#title {
+	padding-top: 280px;
+}
+
+#button {
+	width: 500px;
+	height: 200px;
+	font-size: large;
+	background-color: white;
+	opacity: 0.5;
+	border-radius: 30px;
+}
+.row {
+	display: inline-block;
+	width: 100px;
+	text-align: center;
+}
+
+.heading {
+	text-align: center;
+	width: 400px;
+}
+
+h1 {
+	text-align: center;
+}
+.column {
+	border: black;
+	border-style: solid;
+	border-radius: 5%;
+	height: 100px;
+	margin: 5px;
+}
+
+.gridcontainer {
+	text-align: center;
+	margin: 100px;
+}
+
+.column:hover {
+	background: rgba(0,0,0,0.5);
+}
+
+.black {
+	background: black;
+}
+
+.blue {
+	background: blue;
+}
+
+.green {
+	background: green;
+}
+
+.pink {
+	background: pink;
+}
+
+.green {
+	background: green;
+}
+h3 {
+	display: inline-block;
+	color: black;
+}
