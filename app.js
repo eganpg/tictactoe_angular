@@ -9,9 +9,13 @@ tictactoe.controller('Grid', function($scope, $firebase) {
 	$scope.remotexMoves = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/xMoves"));
 	$scope.remoteoMoves = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/oMoves"));
 	$scope.remoteCount = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/count")); 
+	$scope.remotePlayer1 = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/player1"));
+	$scope.remotePlayer2 = $firebase(new Firebase("https://tryagain.firebaseio.com/" + "/player2"));
 	$scope.remotexMoves.$bind($scope, "xMoves");
 	$scope.remoteoMoves.$bind($scope, "oMoves");
 	$scope.remoteCount.$bind($scope, "count");
+	$scope.remotePlayer1.$bind($scope, "player1");
+	$scope.remotePlayer2.$bind($scope, "player2");
 	$scope.$watch('xMoves', function() {
     console.log('Model changed!') ;
   }) ;
@@ -53,8 +57,8 @@ tictactoe.controller('Grid', function($scope, $firebase) {
 																];
 	$scope.reset = function() {
 		for(q = 0; q < 9; q++) {
-			$scope.xArray.pop();
-			$scope.oArray.pop();
+			// $scope.xArray.pop();
+			// $scope.oArray.pop();
 			$scope.xMoves = 0;
 			$scope.oMoves = 0;
 			$scope.count = 0;
